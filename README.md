@@ -92,3 +92,105 @@ Y_{pred} = \arg\max_{Y_k} P(Y_k) \prod_{i=1}^{n} P(x_i | Y_k)
 - **Prediction** is made by selecting the class with the highest probability.
 
 This method is computationally efficient and widely used in spam detection, text classification, and recommendation systems.
+
+# Naïve Bayes Classifier with Hand Calculation
+
+## Step 1: Given Raw Dataset
+Consider a simple dataset with two features (Height and Weight) and a class label (Sport Type).
+
+| Person | Height (cm) | Weight (kg) | Sport Type  |
+|--------|------------|------------|-------------|
+| A      | 180        | 80         | Basketball  |
+| B      | 175        | 75         | Basketball  |
+| C      | 190        | 85         | Basketball  |
+| D      | 160        | 55         | Tennis      |
+| E      | 165        | 60         | Tennis      |
+| F      | 155        | 50         | Tennis      |
+
+**Goal:** Predict the sport type for a new person with:  
+- Height = 170 cm  
+- Weight = 65 kg  
+
+## Step 2: Calculate Prior Probabilities
+\[
+P(Basketball) = \frac{3}{6} = 0.5
+\]
+\[
+P(Tennis) = \frac{3}{6} = 0.5
+\]
+
+## Step 3: Compute Mean and Standard Deviation
+Using the **Gaussian Naïve Bayes** formula:
+\[
+P(x | Y) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x - \mu)^2}{2\sigma^2}}
+\]
+
+### For Basketball Players
+\[
+\mu_{height} = \frac{180 + 175 + 190}{3} = 181.67
+\]
+\[
+\sigma_{height} = \sqrt{\frac{(180-181.67)^2 + (175-181.67)^2 + (190-181.67)^2}{2}} = 7.57
+\]
+\[
+\mu_{weight} = \frac{80 + 75 + 85}{3} = 80
+\]
+\[
+\sigma_{weight} = \sqrt{\frac{(80-80)^2 + (75-80)^2 + (85-80)^2}{2}} = 5
+\]
+
+### For Tennis Players
+\[
+\mu_{height} = \frac{160 + 165 + 155}{3} = 160
+\]
+\[
+\sigma_{height} = \sqrt{\frac{(160-160)^2 + (165-160)^2 + (155-160)^2}{2}} = 5
+\]
+\[
+\mu_{weight} = \frac{55 + 60 + 50}{3} = 55
+\]
+\[
+\sigma_{weight} = \sqrt{\frac{(55-55)^2 + (60-55)^2 + (50-55)^2}{2}} = 5
+\]
+
+## Step 4: Compute Likelihood Probabilities
+For new person with **Height = 170 cm, Weight = 65 kg**, using the Gaussian formula:
+
+### Basketball Probability
+\[
+P(170 | Basketball) = \frac{1}{\sqrt{2\pi (7.57)^2}} e^{-\frac{(170 - 181.67)^2}{2 (7.57)^2}} = 0.0213
+\]
+\[
+P(65 | Basketball) = \frac{1}{\sqrt{2\pi (5)^2}} e^{-\frac{(65 - 80)^2}{2 (5)^2}} = 0.0007
+\]
+
+### Tennis Probability
+\[
+P(170 | Tennis) = \frac{1}{\sqrt{2\pi (5)^2}} e^{-\frac{(170 - 160)^2}{2 (5)^2}} = 0.0024
+\]
+\[
+P(65 | Tennis) = \frac{1}{\sqrt{2\pi (5)^2}} e^{-\frac{(65 - 55)^2}{2 (5)^2}} = 0.0024
+\]
+
+## Step 5: Compute Posterior Probabilities
+\[
+P(Basketball | X) = P(170 | Basketball) P(65 | Basketball) P(Basketball)
+\]
+\[
+= (0.0213) (0.0007) (0.5) = 7.46 \times 10^{-6}
+\]
+
+\[
+P(Tennis | X) = P(170 | Tennis) P(65 | Tennis) P(Tennis)
+\]
+\[
+= (0.0024) (0.0024) (0.5) = 2.88 \times 10^{-6}
+\]
+
+## Step 6: Prediction
+Since \( P(Basketball | X) > P(Tennis | X) \), the predicted sport type is:
+
+## Conclusion
+- Bayes’ Theorem was applied step by step.
+- Gaussian Probability Distribution was used for numerical features.
+- The result shows that the new person is most likely a Basketball player.
