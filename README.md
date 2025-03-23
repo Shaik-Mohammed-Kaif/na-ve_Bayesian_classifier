@@ -92,3 +92,99 @@ $$
 - **Prediction** is made by selecting the class with the highest probability.
 
 This method is computationally efficient and widely used in spam detection, text classification, and recommendation systems.
+
+# Naïve Bayes: Real-Time Example (Spam Detection)
+
+## Problem Statement
+We want to classify an **email** as **spam or not spam** based on the presence of certain words.
+
+## 1. Applying Bayes’ Theorem
+Using Naïve Bayes, we calculate:
+
+$$
+P(Spam | Words) = \frac{P(Words | Spam) P(Spam)}{P(Words)}
+$$
+
+Since \( P(Words) \) is constant for both classes:
+
+$$
+P(Spam | Words) \propto P(Words | Spam) P(Spam)
+$$
+
+Similarly, for **Not Spam (Ham):**
+
+$$
+P(Ham | Words) \propto P(Words | Ham) P(Ham)
+$$
+
+## 2. Naïve Bayes Assumption
+Each word is conditionally independent given the class:
+
+$$
+P(Words | Spam) = P(w_1 | Spam) P(w_2 | Spam) ... P(w_n | Spam)
+$$
+
+Thus, for prediction:
+
+$$
+P(Spam | Words) \propto P(Spam) \prod_{i=1}^{n} P(w_i | Spam)
+$$
+
+## 3. Example Dataset
+
+| Email ID | Words in Email | Spam (Y/N) |
+|----------|---------------|------------|
+| 1        | "Win lottery now" | Yes |
+| 2        | "Hello, how are you?" | No |
+| 3        | "Win cash prize today" | Yes |
+| 4        | "Meeting at 5 PM" | No |
+
+### **Word Probabilities**
+From training data:
+
+$$
+P(Spam) = \frac{2}{4} = 0.5, \quad P(Ham) = \frac{2}{4} = 0.5
+$$
+
+For word **"Win"**:
+
+$$
+P(Win | Spam) = \frac{2}{2} = 1, \quad P(Win | Ham) = \frac{0}{2} = 0
+$$
+
+For word **"Hello"**:
+
+$$
+P(Hello | Spam) = \frac{0}{2} = 0, \quad P(Hello | Ham) = \frac{1}{2} = 0.5
+$$
+
+Applying **Laplace Smoothing (+1 in numerator, +Total Vocabulary in denominator):**
+
+$$
+P(Win | Spam) = \frac{2+1}{2+4} = \frac{3}{6} = 0.5
+$$
+
+$$
+P(Win | Ham) = \frac{0+1}{2+4} = \frac{1}{6} \approx 0.167
+$$
+
+## 4. Predicting a New Email:  
+**Email: "Win cash now"**
+
+We calculate:
+
+$$
+P(Spam | Email) \propto P(Spam) P(Win | Spam) P(Cash | Spam) P(Now | Spam)
+$$
+
+$$
+P(Ham | Email) \propto P(Ham) P(Win | Ham) P(Cash | Ham) P(Now | Ham)
+$$
+
+If \( P(Spam | Email) > P(Ham | Email) \), classify as **Spam**, else **Not Spam**.
+
+## 5. Conclusion
+- **Naïve Bayes is useful for spam filtering.**
+- **Each word contributes to the probability calculation.**
+- **Laplace smoothing prevents zero probabilities.**
+
