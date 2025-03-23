@@ -1,210 +1,94 @@
-यहां कुछ सुधार किए गए हैं ताकि गणना और प्रस्तुति सही और स्पष्ट हो:  
+# Naïve Bayes Theorem and Feature Formulas
 
----
+## 1. Naïve Bayes Theorem
+The Naïve Bayes classifier is a probabilistic model based on **Bayes’ theorem**, assuming independence among features.
 
-## **Naïve Bayes Theorem and Feature Formulas**
-
-### **1. Naïve Bayes Theorem**  
-Naïve Bayes एक प्रायिकता-आधारित मॉडल है जो **Bayes' Theorem** पर निर्भर करता है और फीचर्स को स्वतंत्र मानता है।  
-
-\[
+math
 P(Y | X) = \frac{P(X | Y) P(Y)}{P(X)}
-\]
 
-जहाँ:  
-- \(P(Y | X)\) = Posterior Probability (X दिए जाने पर Y की प्रायिकता)  
-- \(P(X | Y)\) = Likelihood (Y दिए जाने पर X की प्रायिकता)  
-- \(P(Y)\) = Prior Probability (किसी क्लास Y की पूर्व प्रायिकता)  
-- \(P(X)\) = Evidence (X की कुल प्रायिकता)  
 
-क्योंकि \(P(X)\) सभी क्लास के लिए समान है:
+Where:
+- P(Y | X): Posterior probability (Probability of class Y given feature vector X)
+- P(X | Y): Likelihood (Probability of X given class Y)
+- P(Y): Prior probability (Probability of class Y before observing features)
+- P(X): Evidence (Probability of X across all classes)
 
-\[
+Since P(X) is constant for all classes:
+
+math
 P(Y | X) \propto P(X | Y) P(Y)
-\]
 
-### **2. Naïve Bayes Assumption**  
-Naïve Bayes यह मानता है कि प्रत्येक फीचर क्लास \(Y\) के लिए स्वतंत्र है:
 
-\[
-P(X | Y) = P(x_1 | Y) P(x_2 | Y) ... P(x_n | Y)
-\]
+## 2. Naïve Bayes Assumption
+The model assumes each feature is conditionally independent given the class label Y:
 
-अतः:
+math
+P(X | Y) = P(x_1, x_2, ..., x_n | Y) = P(x_1 | Y) P(x_2 | Y) ... P(x_n | Y)
 
-\[
+
+Thus, the simplified formula becomes:
+
+math
 P(Y | X) \propto P(Y) \prod_{i=1}^{n} P(x_i | Y)
-\]
 
----
 
-## **3. Types of Naïve Bayes Classifiers**
+## 3. Types of Naïve Bayes Classifiers
 
-### **A. Gaussian Naïve Bayes (Continuous Features)**
-यदि फीचर्स **Gaussian (Normal) Distribution** को फॉलो करते हैं, तो:
+### A. Gaussian Naïve Bayes (For Continuous Features)
+When features follow a **normal distribution**, we use the Gaussian formula:
 
-\[
+math
 P(x_i | Y) = \frac{1}{\sqrt{2 \pi \sigma^2}} e^{-\frac{(x_i - \mu)^2}{2 \sigma^2}}
-\]
 
-जहाँ:  
-- \( \mu \) = Mean (औसत)  
-- \( \sigma \) = Standard Deviation (मानक विचलन)  
 
----
+Where:
+- μ = Mean of feature x_i for class Y
+- σ = Standard deviation of feature x_i for class Y
 
-### **B. Multinomial Naïve Bayes (Categorical Features)**
-यह तब उपयोगी होता है जब फीचर्स शब्दों की फ्रीक्वेंसी दर्शाते हैं:
+### B. Multinomial Naïve Bayes (For Categorical Features)
+Used when features represent frequency counts (e.g., word occurrences in text classification):
 
-\[
+math
 P(x_i | Y) = \frac{count(x_i, Y) + 1}{\sum_{j} count(x_j, Y) + |V|}
-\]
 
-जहाँ:  
-- \( count(x_i, Y) \) = क्लास \(Y\) में फीचर \(x_i\) की फ्रीक्वेंसी  
-- \( |V| \) = कुल शब्दावली की संख्या  
 
----
+Where:
+- count(x_i, Y): Number of times feature x_i appears in class Y
+- |V|: Total number of unique features (Vocabulary size)
+- **Laplace Smoothing** (+1) prevents zero probabilities
 
-### **C. Bernoulli Naïve Bayes (Binary Features)**
-जब फीचर्स बाइनरी होते हैं (0 या 1), तो:
+### C. Bernoulli Naïve Bayes (For Binary Features)
+Used for binary features (0 or 1), such as presence/absence of a word in text classification:
 
-\[
+math
 P(x_i | Y) =
 \begin{cases}
-P_i, & \text{if } x_i = 1 \\
-1 - P_i, & \text{if } x_i = 0
+P_i & \text{if } x_i = 1 \\
+1 - P_i & \text{if } x_i = 0
 \end{cases}
-\]
 
-जहाँ \( P_i \) = क्लास \(Y\) में \( x_i \) के उपस्थित होने की प्रायिकता।  
 
----
+Where P_i is the probability of x_i = 1 in class Y.
 
-## **4. Class Prediction**
-\[
+## 4. Class Prediction
+For a given test feature vector X = (x_1, x_2, ..., x_n), compute:
+
+math
 P(Y_k | X) = P(Y_k) \prod_{i=1}^{n} P(x_i | Y_k)
-\]
 
-सबसे अधिक स्कोर वाली क्लास चुनी जाती है:
 
-\[
+The predicted class Y_pred is:
+
+math
 Y_{pred} = \arg\max_{Y_k} P(Y_k) \prod_{i=1}^{n} P(x_i | Y_k)
-\]
 
----
 
-# **Naïve Bayes Classifier: Hand Calculation Example**
+## Summary
+- **Bayes’ Theorem** is applied to classification.
+- **Naïve Bayes Assumption** considers independent features.
+- **Gaussian Naïve Bayes** handles continuous data using a normal distribution.
+- **Multinomial Naïve Bayes** is used for text classification (word frequency).
+- **Bernoulli Naïve Bayes** is used for binary features (word presence/absence).
+- **Prediction** is made by selecting the class with the highest probability.
 
-### **Step 1: Given Dataset**  
-| Person | Height (cm) | Weight (kg) | Sport Type  |
-|--------|------------|------------|-------------|
-| A      | 180        | 80         | Basketball  |
-| B      | 175        | 75         | Basketball  |
-| C      | 190        | 85         | Basketball  |
-| D      | 160        | 55         | Tennis      |
-| E      | 165        | 60         | Tennis      |
-| F      | 155        | 50         | Tennis      |
-
-**Goal:**  
-Predict **Sport Type** for a new person with:  
-- **Height = 170 cm**  
-- **Weight = 65 kg**  
-
----
-
-### **Step 2: Compute Prior Probabilities**
-\[
-P(Basketball) = \frac{3}{6} = 0.5
-\]
-\[
-P(Tennis) = \frac{3}{6} = 0.5
-\]
-
----
-
-### **Step 3: Compute Mean and Standard Deviation**  
-#### **For Basketball Players**
-\[
-\mu_{height} = \frac{180 + 175 + 190}{3} = 181.67
-\]
-\[
-\sigma_{height} = \sqrt{\frac{(180-181.67)^2 + (175-181.67)^2 + (190-181.67)^2}{2}} = 7.57
-\]
-\[
-\mu_{weight} = \frac{80 + 75 + 85}{3} = 80
-\]
-\[
-\sigma_{weight} = 5
-\]
-
-#### **For Tennis Players**
-\[
-\mu_{height} = \frac{160 + 165 + 155}{3} = 160
-\]
-\[
-\sigma_{height} = 5
-\]
-\[
-\mu_{weight} = \frac{55 + 60 + 50}{3} = 55
-\]
-\[
-\sigma_{weight} = 5
-\]
-
----
-
-### **Step 4: Compute Likelihood Probabilities**
-For **Height = 170 cm, Weight = 65 kg**, using Gaussian formula:
-
-#### **Basketball Probability**
-\[
-P(170 | Basketball) = \frac{1}{\sqrt{2\pi (7.57)^2}} e^{-\frac{(170 - 181.67)^2}{2 (7.57)^2}} = 0.0213
-\]
-\[
-P(65 | Basketball) = \frac{1}{\sqrt{2\pi (5)^2}} e^{-\frac{(65 - 80)^2}{2 (5)^2}} = 0.0007
-\]
-
-#### **Tennis Probability**
-\[
-P(170 | Tennis) = \frac{1}{\sqrt{2\pi (5)^2}} e^{-\frac{(170 - 160)^2}{2 (5)^2}} = 0.0024
-\]
-\[
-P(65 | Tennis) = \frac{1}{\sqrt{2\pi (5)^2}} e^{-\frac{(65 - 55)^2}{2 (5)^2}} = 0.0024
-\]
-
----
-
-### **Step 5: Compute Posterior Probabilities**
-\[
-P(Basketball | X) = P(170 | Basketball) P(65 | Basketball) P(Basketball)
-\]
-\[
-= (0.0213) (0.0007) (0.5) = 7.46 \times 10^{-6}
-\]
-
-\[
-P(Tennis | X) = P(170 | Tennis) P(65 | Tennis) P(Tennis)
-\]
-\[
-= (0.0024) (0.0024) (0.5) = 2.88 \times 10^{-6}
-\]
-
----
-
-### **Step 6: Prediction**
-\[
-P(Basketball | X) > P(Tennis | X)
-\]
-
-**Final Prediction:**  
-The person is most likely a **Basketball player**. ✅  
-
----
-
-## **Conclusion**
-✅ **Naïve Bayes theorem** का उपयोग किया गया।  
-✅ **Gaussian Probability Distribution** का उपयोग हुआ।  
-✅ **Prediction** Basketball के पक्ष में गया।  
-
-इस तरीके से, **Naïve Bayes Classifier** का उपयोग वास्तविक डेटा पर किया जा सकता है। 🚀
+This method is computationally efficient and widely used in spam detection, text classification, and recommendation systems.
